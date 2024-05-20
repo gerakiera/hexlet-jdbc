@@ -14,9 +14,21 @@ public class Application {
             try (var statement = conn.createStatement()) {
                 statement.execute(sql);
             }
-            var sql2 = "INSERT INTO users (username, phone) VALUES ('tommy', '123456789')";
-            try (var statement2 = conn.createStatement()) {
-                statement2.executeUpdate(sql2);
+            var sql2 = "INSERT INTO users (username, phone) VALUES (?, ?)";
+            try (var preparedStatement = conn.prepareStatement(sql2)) {
+                preparedStatement.setString(1, "Tommy");
+                preparedStatement.setString(2, "123456789");
+                preparedStatement.executeUpdate();
+                preparedStatement.setString(1, "Maria");
+                preparedStatement.setString(2, "987654321");
+                preparedStatement.executeUpdate();
+                preparedStatement.setString(1, "Kris");
+                preparedStatement.setString(2, "999999999");
+                preparedStatement.executeUpdate();
+            }
+            var sql4 = "DELETE FROM users WHERE username = 'Tommy'";
+            try (var preparedStatement = conn.prepareStatement(sql4)) {
+                preparedStatement.executeUpdate();
             }
             var sql3 = "SELECT * FROM users";
             try (var statement3 = conn.createStatement()) {
@@ -28,6 +40,5 @@ public class Application {
                 }
             }
         }
-
     }
 }
